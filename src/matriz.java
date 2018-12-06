@@ -12,6 +12,7 @@ public class matriz {
 	int fit=0;
 	int Mmax; //maximo de maquinas por celda	
 	
+	
 	public  matriz (int[][] matriz, int celdas, int Mmax){
 		this.Mmax= Mmax;
 		this.matrizInicial= matriz;
@@ -19,7 +20,9 @@ public class matriz {
 		this.NMaquinas=matrizInicial.length;
 		this.NPartes=matrizInicial[0].length;
 		this.crearMxC();
-		while(!this.isFactible()){System.out.println("creando nueva");this.crearMxC();}
+		while(!this.isFactible()){
+			//System.out.println("creando nueva");
+			this.crearMxC();}
 		this.crearPxC();
 	}
 	
@@ -41,7 +44,7 @@ public class matriz {
 			mat_mxc[x][randommath-1]=1;
 		}
 		//if(!this.isFactible())crearMxC();
-		System.out.println(isFactible());	
+		//System.out.println(isFactible());	
 		//this.showMatriz(this.mat_mxc); //ejemplo para mostrar matriz creada .. comentar
 		
 		
@@ -49,17 +52,23 @@ public class matriz {
 	
 	public boolean isFactible(){ //restriccion maximo maquinas
 		int MmaxC=0;
-		for(int r=0;r<this.mat_mxc.length;r++){
-			MmaxC=MmaxC+this.mat_mxc[r][0];
-			if(r==this.mat_mxc.length -1){
-				//System.out.println("MmaxC: "+MmaxC);
-				//System.out.println("Mmax: "+Mmax);
+		for(int rr=0;rr<this.mat_mxc[0].length;rr++){
+			for(int r=0;r<this.mat_mxc.length;r++){
+			
+				MmaxC=MmaxC+this.mat_mxc[r][rr];
+				//if(r==this.mat_mxc.length -1){
+					//System.out.println("MmaxC: "+MmaxC);
+					//System.out.println("Mmax: "+Mmax);
+	
+					//System.out.println("el MAX: "+ MmaxC+"columna "+r);
+					
 
-				//System.out.println("el MAX: "+ MmaxC+"columna "+r);
-				if(MmaxC>this.Mmax) 
-					return false;
+				//}
+			
 			}
-				
+			if(MmaxC>this.Mmax) 
+				return false;
+			MmaxC=0;
 		}
 		return true;
 		

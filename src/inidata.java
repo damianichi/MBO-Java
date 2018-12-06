@@ -23,8 +23,9 @@ public class inidata {
 	double r2=0;
 	double r3=0;
 	int celdas;
-	
 	matriz bestSol;
+	
+	
 	int totalfit;
 
 	
@@ -34,6 +35,7 @@ public class inidata {
 	matriz[] ag2;	//soluciones poblaciones 2
 	// --------------end-------------------
 	public inidata(int [][]matrizI, int celdas,int Mmax){
+		bestSol= new matriz(matrizI,celdas,Mmax);
 		NP1=(int) Math.round(p*poblacion);
 		NP2 = poblacion - NP1;
 		System.out.println("NP:"+NP1+ "-"+NP2);
@@ -64,18 +66,24 @@ public class inidata {
 		}
 	}
 	public void algoritmo(){
-		
+
 		//this.pruebas();
 		Random random = new Random();
 		this.actualizaPxC(ag);
+		//this.verSolAG(); //para ver soluciones iniciales
+
 		this.CalculaCosto(ag);
 		this.ordenarSol(ag);
+		//this.verSolAG(); //para ver soluciones post primer orden
+
 		
-		//this.bestSol= ag[0];
+			this.bestSol.mat_mxc= this.ag[0].mat_mxc;
+			this.bestSol.fit= this.ag[0].fit;
 		
-		//totalfit= this.ag[0].fit;
-		solucionparche();
-		this.bestSol.showMatriz(this.bestSol.mat_mxc);
+		
+		
+		//solucionparche();
+		//this.bestSol.showMatriz(this.bestSol.mat_mxc);
 
 		for (int hx=0; hx< this.max_p; hx++){
 			// estrategia elitista al parecer agrega y respalda las 2 primeras soluciones en cada generacion.
@@ -171,15 +179,22 @@ public class inidata {
 		this.actualizaPxC(ag);
 		this.CalculaCosto(ag);
 		this.ordenarSol(ag);
-		//this.bestSol= ag[0];
-		//totalfit= this.ag[0].fit;
-		solucionparche();
+		
+		if(ag[0].isFactible() && ag[0].fit <= bestSol.fit){
+			System.out.println("SE CAMBIOOO");
+			this.bestSol.mat_mxc= ag[0].mat_mxc;
+			this.bestSol.fit= this.ag[0].fit;
+		}
+			//solucionparche();
 		
 		
 		}
+		//this.verSolAG(); //ver soluciones finales
 		//this.bestSol.showMatriz(this.bestSol.mat_mxc);
-		System.out.println("mejor solucion sin verificacion de factibilidad"+this.bestSol.fit);
-		this.ag[0].showMatriz(bestSol.mat_mxc);
+		//HABILITAR ESTAS
+		System.out.println("solucion encontrada"+this.bestSol.fit);
+		this.bestSol.showMatriz(bestSol.mat_mxc);
+		
 		//this.pruebas();
 	}
 
@@ -265,5 +280,15 @@ public class inidata {
 			
 		}
 	}
+	
+	public void verSolAG(){
+		for(int i=0; i<this.ag.length;i++){
+			this.ag[i].showMatriz(this.ag[i].mat_mxc);
+			System.out.println("es factible?: "+this.ag[i].isFactible());
+			System.out.println("Fit: "+this.ag[i].fit);
+			System.out.println("--------------------");
+		}
+	}
+	
 	
 }
