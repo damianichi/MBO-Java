@@ -1,3 +1,6 @@
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -7,7 +10,7 @@ public class inidata {
 	//------------- primera parte algoritmo--------
 	int keep =2;
 	double p= 0.416;
-	int poblacion= 1000;
+	int poblacion= 3000;
 	final Integer max_p= 50; //gen max
 	int NP1;
 	int NP2 ;
@@ -22,8 +25,9 @@ public class inidata {
 	double r1=0;
 	double r2=0;
 	double r3=0;
-	int celdas;
+	
 	matriz bestSol;
+	
 	
 	
 	int totalfit;
@@ -33,8 +37,14 @@ public class inidata {
 	matriz[] ag ;	// array con todas las soluciones
 	matriz[] ag1;	// soluciones poblacion 1
 	matriz[] ag2;	//soluciones poblaciones 2
+	int [][]matrizI;
+	int celdas;
+	int Mmax;
 	// --------------end-------------------
-	public inidata(int [][]matrizI, int celdas,int Mmax){
+	//public inidata(int [][]matrizI, int celdas,int Mmax){
+	public inidata(String archivoDir){
+		
+		LeerArchivo(archivoDir);
 		bestSol= new matriz(matrizI,celdas,Mmax);
 		NP1=(int) Math.round(p*poblacion);
 		NP2 = poblacion - NP1;
@@ -49,6 +59,13 @@ public class inidata {
 		this.celdas=celdas;
 		this.mboObject(matrizI, celdas, Mmax);	//inicializamos con soluciones random
 	}
+	
+	
+	
+	
+	
+	
+	
 	public void mboObject(int [][]matrizI, int celdas,int Mmax){ //le entregamos la matriz Inicial, celda y Mmax
 		int Nps=0;
 		for (int i = 0; i < this.poblacion; ++i){		
@@ -84,8 +101,12 @@ public class inidata {
 		
 		//solucionparche();
 		//this.bestSol.showMatriz(this.bestSol.mat_mxc);
+			
+
 
 		for (int hx=0; hx< this.max_p; hx++){
+		
+
 			// estrategia elitista al parecer agrega y respalda las 2 primeras soluciones en cada generacion.
 			for (int ik=0; ik<keep; ik++){  
 				if(ag[ik].esFactible2()){
@@ -109,9 +130,8 @@ public class inidata {
 				}
 			}
 			
-			
 			// Migration operator Falta como calcular pa la segunda dimension ... a la vuelta
-			
+
 
 			for(int k1=0; k1 <NP1;k1++){
 
@@ -129,8 +149,18 @@ public class inidata {
 						}
 					
 				}
+				//ag[k1].showMatriz(ag[k1].mat_mxc);
+				//System.out.println("--------------");
+				//ag[k1].showMatriz(land1);
+				//System.out.println("-------fin-----");
 				
-				ag[k1].mat_mxc= land1;
+				if(this.LandIsFactible(land1)){
+					ag[k1].mat_mxc= land1;
+				}else{
+					//System.out.println("repite");
+					
+				}
+				
 				
 				
 		}
@@ -170,7 +200,7 @@ public class inidata {
 			ag[NP1+k2].mat_mxc= land2;
 			if(hx<3){
 
-				//System.out.println("land2  DESPUES:");
+			//	System.out.println("land2  DESPUES:");
 				//ag[NP1+k2].showMatriz(ag[NP1+k2].mat_mxc);
 			}
 	}
@@ -181,7 +211,7 @@ public class inidata {
 		this.ordenarSol(ag);
 		
 		if(ag[0].isFactible() && ag[0].fit <= bestSol.fit){
-			System.out.println("SE CAMBIOOO");
+			//System.out.println("SE CAMBIOOO");
 			this.bestSol.mat_mxc= ag[0].mat_mxc;
 			this.bestSol.fit= this.ag[0].fit;
 		}
@@ -288,7 +318,125 @@ public class inidata {
 			System.out.println("Fit: "+this.ag[i].fit);
 			System.out.println("--------------------");
 		}
+		
+		System.out.println("-----------FIIIIiiIIIIIn---------");
+	}
+	public void verSolAG1(){
+		for(int i=0; i<this.ag1.length;i++){
+			this.ag1[i].showMatriz(this.ag1[i].mat_mxc);
+			System.out.println("es factible?: "+this.ag1[i].isFactible());
+			System.out.println("Fit: "+this.ag1[i].fit);
+			System.out.println("--------------------");
+		}
+		
+		System.out.println("-----------FIIIIiiIIIIIn---------");
 	}
 	
+	public boolean LandIsFactible(int [][] matrizF){ //restriccion maximo maquinas
+		int MmaxC=0;
+		for(int rr=0;rr<matrizF[0].length;rr++){
+			for(int r=0;r<matrizF.length;r++){
+				MmaxC=MmaxC+matrizF[r][rr];
+
+			}
+			if(MmaxC>this.Mmax) 
+				return false;
+			MmaxC=0;
+		}
+		return true;
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	public void LeerArchivo(String archivoDir){
+		File archivo = null;
+	      FileReader fr = null;
+	      BufferedReader br = null;
+	      int leer=0;
+
+	      try {
+	         // Apertura del fichero y creacion de BufferedReader para poder
+	         // hacer una lectura comoda (disponer del metodo readLine()).
+	         //archivo = new File ("BoctorProblem_90_instancias/MCDP_Boctor_Problem01_C2_M8.txt");
+		     archivo = new File (archivoDir);
+
+	    	 fr = new FileReader (archivo);
+	         br = new BufferedReader(fr);
+
+	         // Lectura del fichero
+	         String linea;
+	         String[] dataa;
+	         int[] dataaM;
+	         
+	         int partes=0;
+	         int maquinas=0;
+	         this.celdas=0;
+	         this.Mmax=0;
+	         ArrayList<int[]> matrizList=new ArrayList<int []>();
+	         while((linea=br.readLine())!=null){
+	        	 if(leer!=0){
+	        		leer++;
+	        		if(leer<=5||leer>=12)
+	        			if(leer<=5){
+	        				dataa= linea.split("=");
+	        				if(leer==2){
+	        					maquinas= Integer.parseInt(dataa[1]);
+	        				}
+	        				if(leer==3){
+	        					partes= Integer.parseInt(dataa[1]);
+	        				}
+	        				if(leer==4){
+	        					celdas= Integer.parseInt(dataa[1]);
+	        				}
+	        				if(leer==5){
+	        					Mmax= Integer.parseInt(dataa[1]);
+	        				}
+	        			}else{
+	        				dataa= linea.split(" ");
+	        				dataaM=new int[partes];
+	        				for (int i=0;i<partes;i++){
+	        					if(!dataa[i].equals("\\")){
+	        						dataaM[i]=Integer.parseInt(dataa[i]);
+	        					}
+	        				}
+	        				matrizList.add(dataaM);
+        					//System.out.println(Arrays.toString(dataaM));
+
+	        			}
+	 	            
+	 	          }
+	        	 if(linea.equals("#-----MCDP-VALUES-------------------------------------")){
+	        		 leer++;
+	        		// System.out.println("encontre uno");
+
+	        	 }        	 
+	        	 
+	         }
+	         int [][] matriz=new int[maquinas][partes];
+	         for(int i=0;i<matrizList.size();i++){
+	        	 matriz[i]=matrizList.get(i);
+	        	 //System.out.println(Arrays.toString(matrizList.get(i)));
+	         }
+	         this.matrizI=matriz;
+	      }
+	      catch(Exception e){
+	         e.printStackTrace();
+	      }finally{
+	         try{                    
+	            if( null != fr ){   
+	               fr.close();     
+	            }                  
+	         }catch (Exception e2){ 
+	            e2.printStackTrace();
+	         }
+	      }
+	
+	}
 	
 }
