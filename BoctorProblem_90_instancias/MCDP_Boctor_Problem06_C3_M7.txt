@@ -1,0 +1,49 @@
+#-----FILE-DETAILS------------------------------------
+File details=Standard Boctor Problems.
+Version=1.0
+Created by=Boris L. Almonacid, {boris.almonacid.g@mail.pucv.cl}
+Date created=Apr 16, 2015
+Modified by=
+Date modified=
+#-----BECHMARK-INFO-----------------------------------
+Benchmark info= Boctor Problems
+References=Boctor, F. F. (1991). A Jinear formulation of the machine-part cell formation problem. THE INTERNATIONAL JOURNAL OF PRODUCTION RESEARCH, 29(2), 343-356.
+BibTeX=\
+@article{boctor1991jinear, \
+  title={A Jinear formulation of the machine-part cell formation problem}, \
+  author={Boctor, Fayez F}, \
+  journal={THE INTERNATIONAL JOURNAL OF PRODUCTION RESEARCH}, \
+  volume={29}, \
+  number={2}, \
+  pages={343--356}, \
+  year={1991}, \
+  publisher={Taylor \& Francis} \
+}
+Best Solution=4
+#-----MCDP-VALUES-------------------------------------
+Machines=16
+Parts=30
+Cells=3
+Mmax=7
+Mmin=0
+Sum=1
+Var_1=value
+Var_2=value
+Var_3=value
+Matrix=\
+0 0 0 1 1 0 0 0 0 0 1 0 1 0 0 0 1 1 0 0 0 1 0 0 0 0 0 0 0 1 \
+0 0 0 0 1 1 0 1 1 0 0 0 0 0 1 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 \
+0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 1 1 0 0 \
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 0 1 1 0 0 0 \
+1 0 1 0 1 1 0 1 1 1 0 0 0 0 1 0 0 0 1 0 1 0 0 0 0 0 0 0 0 0 \
+0 1 0 0 0 0 0 0 0 0 0 0 0 1 0 1 0 0 0 0 0 0 0 0 1 0 0 1 1 0 \
+0 0 0 0 1 1 0 1 1 0 0 0 0 0 1 0 0 0 1 0 1 0 0 0 0 0 0 0 0 0 \
+1 0 1 0 1 1 0 1 1 0 0 0 0 0 0 0 0 0 1 1 1 0 0 0 0 0 0 0 0 0 \
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 0 1 1 0 0 0 \
+1 0 1 0 1 0 0 1 0 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 \
+0 0 0 1 0 0 1 0 0 0 1 1 1 0 0 0 1 1 0 0 0 1 0 0 0 0 0 0 0 1 \
+0 0 0 0 0 0 1 0 0 0 0 0 0 1 0 1 0 0 0 0 0 0 0 0 1 0 0 1 1 0 \
+0 1 0 0 0 0 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 0 1 0 0 1 1 0 \
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 \
+0 1 0 0 1 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1 0 0 1 1 0 \
+0 1 0 0 0 0 0 0 0 0 0 0 0 1 0 1 0 0 0 0 0 0 0 0 1 0 0 1 1 0
