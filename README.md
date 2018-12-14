@@ -7,7 +7,7 @@ paper: https://www.researchgate.net/publication/275964443_Monarch_Butterfly_Opti
 original source: https://github.com/ggw0122/Monarch-Butterfly-Optimization
 
 
-Proyecto nombre "Proyecto FIA.pdf" dentro de raiz del repositorio.
+Proyecto nombre "Proyecto FIA.pdf" dentro de raiz del repositorio, el cual representa el problema a resolver.
 
 las instancias para ejemplos estan tambien en raiz.
 
