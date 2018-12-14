@@ -13,7 +13,7 @@ public class matriz {
 	int Mmax; //maximo de maquinas por celda	
 	
 	
-	public  matriz (int[][] matriz, int celdas, int Mmax){
+	public  matriz (int[][] matriz, int celdas, int Mmax){ //constructor para inicializar solucion de forma aleatoria
 		this.Mmax= Mmax;
 		this.matrizInicial= matriz;
 		this.celdas=celdas;
@@ -21,29 +21,21 @@ public class matriz {
 		this.NPartes=matrizInicial[0].length;
 		this.crearMxC();
 		while(!this.isFactible()){
-			//System.out.println("creando nueva");
-			this.crearMxC();}
+			this.crearMxC();}		//solo conserva una MxC si esta es factible
 		this.crearPxC();
 	}
-	public  matriz (int[][] matriz, int celdas, int Mmax, int[][] mxc){
+	public  matriz (int[][] matriz, int celdas, int Mmax, int[][] mxc){ //constructor para armar Solución completa ingresando MxC
 		this.Mmax= Mmax;
-		this.mat_mxc=this.copiarArr(mxc); //COPIAR ARREGLO
+		this.mat_mxc=this.copiarArr(mxc); 
 		this.matrizInicial= matriz;
 		this.celdas=celdas;
 		this.NMaquinas=matrizInicial.length;
 		this.NPartes=matrizInicial[0].length;
-		//this.crearMxC();
 		this.crearPxC();
 		this.calcularfit();
 
 	}
-	
-	public matriz(String direccion){
-		// codigo para cargar matriz desde txt
-		
-	}
-	
-	
+
 	
 	public int[][] copiarArr(int[][] src) {
 	    int length = src.length;
@@ -53,14 +45,6 @@ public class matriz {
 	    }
 	    return target;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
 	public void crearMxC(){ // se crea una primera solucion con 1 aleatorios
 		Random random = new Random();
 		this.mat_mxc= new int [this.matrizInicial.length][celdas];		
@@ -69,14 +53,8 @@ public class matriz {
 			//System.out.println("("+x+","+(randommath-1)+")");
 			mat_mxc[x][randommath-1]=1;
 		}
-		//if(!this.isFactible())crearMxC();
-		//System.out.println(isFactible());	
-		//this.showMatriz(this.mat_mxc); //ejemplo para mostrar matriz creada .. comentar
-		
-		
+	
 	}
-	
-	
 	public boolean isFactible(){ //restriccion maximo maquinas
 		int MmaxC=0;
 		int maxMxc=0;
@@ -106,13 +84,7 @@ public class matriz {
 	}
 	public void crearPxC(){
 		this.mat_pxc= new int [this.matrizInicial[0].length][celdas];
-		int cont=0;
-		//System.out.println("indexPiezas "+ matrizInicial[0].length);
-	//	System.out.println("indexceldas "+ this.mat_mxc[0].length);
-	//	System.out.println("indexMaquinas "+ mat_mxc.length);
 		int sumaColum=0;
-		int second=0;
-		//showMatriz(this.mat_mxc);
 		for (int indexCelda=0;indexCelda<this.mat_mxc[0].length; indexCelda++){ // recorre celdas MxC	
 			for(int indexPiezas=0; indexPiezas<matrizInicial[0].length; indexPiezas++){ //recorre las piezas
 				for (int indexMaquinas=0; indexMaquinas< this.mat_mxc.length;indexMaquinas++){ //recorre las maquinas
@@ -130,7 +102,6 @@ public class matriz {
 		this.FixMatriz(mat_pxc); //dejamos el numero mayor como el 1 y los demas como 0		
 		//this.showMatriz(mat_pxc); //solo de ejemplo .. comentar
 	}
-	
 	public void showMatriz(int[][] matrizz ){//muestra la matriz
 		for(int h=0;h<matrizz.length;h++){
             for(int j=0;j<matrizz[h].length;j++) {
@@ -141,7 +112,7 @@ public class matriz {
 		
 	}
 	
-	public void FixMatriz(int [][] matriz){ //funcion para determinar cual tiene prioridad en celdas 
+	public void FixMatriz(int [][] matriz){ //funcion para determinar cual tiene prioridad en celdas (el mayor representa el 1)
 		int Max=0;
 		int posicion=0;
 		for (int fila=0; fila<matriz.length;fila++){
@@ -163,61 +134,16 @@ public class matriz {
 		int totalSumatoria=0;
         for(int k = 0; k < this.mat_mxc[0].length; k++){ //desde celda 1 hasta celda total calcular...
             for(int i = 0; i < this.mat_mxc.length; i++){ //desde maquina 1 hasta el total de maquinas calcular...
-                for(int j = 0; j <this.matrizInicial[0].length; j++){ //desde la pieza 1 hasta el total de piezas calcular...
-                   /* System.out.println("=======================");  //no es obligación mostrar
-                    System.out.println(matrizInicial[i][j]);        //no es obligación mostrar
-                    System.out.println("=======================");  //no es obligación mostrar
-                    System.out.println(mat_pxc[j][k]);              //no es obligación mostrar
-                    System.out.println("=======================");  //no es obligación mostrar
-                    System.out.println(mat_mxc[i][k]);              //no es obligación mostrar
-                    System.out.println("=======================");  //no es obligación mostrar
-                   */ totalSumatoria = totalSumatoria + ( (matrizInicial[i][j])*(mat_pxc[j][k])*(1 - (mat_mxc[i][k])) );
-                    /*System.out.println(totalSumatoria);
-                    System.out.println("***********************");*/
+                for(int j = 0; j <this.matrizInicial[0].length; j++){ //desde la pieza 1 hasta el total de piezas calcular...  
+                   totalSumatoria = totalSumatoria + ( (matrizInicial[i][j])*(mat_pxc[j][k])*(1 - (mat_mxc[i][k])) );
+                   
                 }
             }
         }
         this.fit=totalSumatoria;
 	}	
 		
-	public boolean esFactible2(){		// considera restriccion para partes, maquinas y maquinas por celdas etc.
-    
-    int cont=0;
-    int i = 0;
-    int j = 0;
-      
-    for(i = 0; i < this.NMaquinas; i++) {    //recorremos hacia el lado.
-        for(j = 0; j < this.celdas; j++) {
-            cont = cont + (mat_mxc[i][j]);  //sumamos hacia el lado.
-            if(cont > 1){  //si la suma es distinta de 1 entonces no es factible.
-                return false;
-            }
-        }
-        cont = 0;   //reiniciamos contador para volver a iterar.
-    }
-    for(i = 0; i < this.NPartes; i++) {  //recorremos hacia el lado.
-        for(j = 0; j < this.celdas; j++) {
-            cont =cont + (mat_pxc[i][j]);  //sumamos hacia el lado
-            if(cont > 1){    //si la suma es distinta de 1 entonces no es factible.
-                return false;
-            }
-        }
-        cont = 0; //reiniciamos contador para volver a iterar.
-    }
-      
-    for(i = 0; i < this.celdas; i++) {          //recorremos hacia abajo
-        for(j = 0; j < this.NMaquinas; j++){
-            cont = cont + (mat_mxc[j][i]); //sumamos hacia abajo.
-        }
-        if(cont > Mmax){ //si la suma no supera el máximo total de máquinas aceptadas, entonces la matriz sigue siendo factible.
-        	return false;
-        }
-        cont = 0;
-    }
-    
-    return true;
-    	
-}
+	
 
 
 	

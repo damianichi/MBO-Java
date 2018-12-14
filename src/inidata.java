@@ -9,46 +9,40 @@ public class inidata {
 	
 	//------------- primera parte algoritmo--------
 	int keep =2;
-	double p= 0.416;
-	int poblacion= 2000;
-	final Integer max_p= 150; //gen max
-	int NP1;
-	int NP2 ;
-	int dim1;
-	int dim2;
-	double periodo= 1.2;
-	double particion=0.416;
-	double BAR= particion;
-    int [][] land1; //hay q agregarle las variables de maquina celda
-    int [][] land2; // es supone q tiene q tener misma dimension o tipo que la "solucion" a buscar 
-    double maxStepSize = 1.0;	
-	double r1=0;
-	double r2=0;
-	double r3=0;
+	private final double p= 0.416;
+	private final int poblacion= 5000;
+	private final Integer max_p= 40; //gen max
+	private int NP1;
+	private int NP2;
+	private int dim1;
+	private int dim2;
+	private final double periodo= 1.2;
+	private double particion=0.416;
+	private double BAR= particion;
+	private int [][] land1; //variables donde se crean hijos de mariposas
+    private int [][] land2; 
+    private double maxStepSize = 1.0;	
+	private double r1=0;
+	private double r2=0;
+	private double r3=0;
 	
-	matriz bestSol;
-	matriz Maux;
+	matriz bestSol; //var para almacenar mejor solucion
+	matriz Maux;	//objeto de paso para calcular fit en base a matriz inicial y pxc
 
-	
-	
-	
-	int totalfit;
-
-	
 	ArrayList<matriz> tempElitist = new ArrayList<matriz>();	// tempelitist
-	matriz[] ag ;	// array con todas las soluciones
-	matriz[] ag1;	// soluciones poblacion 1
-	matriz[] ag2;	//soluciones poblaciones 2
-	int [][]matrizI;
+	private matriz[] ag ;	// array con todas las soluciones
+	private matriz[] ag1;	// soluciones poblacion 1
+	private matriz[] ag2;	//soluciones poblaciones 2
+	int [][]matrizI; //matriz inicial
 	int celdas;
 	int Mmax;
-	int bestSolucion;
-	String archivoDir;
+	private int bestSolucion;
+	String archivoDir;	
 	// --------------end-------------------
 	//public inidata(int [][]matrizI, int celdas,int Mmax){
-	public inidata(String archivoDir){
-		this.archivoDir= archivoDir;
-		LeerArchivo(archivoDir);
+	public inidata(String archivoDir){	//inicializa variables para el algoritmo
+		this.archivoDir= archivoDir;//nombre del archivo que contiene la instancia
+		LeerArchivo(archivoDir);		
 		bestSol= new matriz(matrizI,celdas,Mmax);
 		NP1=(int) Math.round(p*poblacion);
 		NP2 = poblacion - NP1;
@@ -68,7 +62,7 @@ public class inidata {
 	public void mboObject(int [][]matrizI, int celdas,int Mmax){ //le entregamos la matriz Inicial, celda y Mmax
 		int Nps=0;
 		for (int i = 0; i < this.poblacion; ++i){		
-			ag[i]=new matriz(matrizI,celdas, Mmax); // en el parentesis inicializar una matriz
+			ag[i]=new matriz(matrizI,celdas, Mmax); //reparte las soluciones para trabajar con sub poblaciones 1 y 2
 			if (i < NP1){
 				ag1[Nps]=ag[i];
 				Nps++;
@@ -81,36 +75,28 @@ public class inidata {
 	}
 	public void algoritmo(){
 
-		//this.pruebas();
 		Random random = new Random();
-		this.actualizaPxC(ag);
-		//this.verSolAG(); //para ver soluciones iniciales
-
-		this.CalculaCosto(ag);
-		this.ordenarSol(ag);
+		this.actualizaPxC(ag);			//actualiza las matrices PxC dentro de cada objeto matriz de ag
+		this.CalculaCosto(ag);			// calcular el fit para cada solucion
+		this.ordenarSol(ag);			// ordena las soluciones encontradas de menor a mayor
 		//this.verSolAG(); //para ver soluciones post primer orden
 
 		
-			this.bestSol.mat_mxc= this.ag[0].mat_mxc;
-			this.bestSol.fit= this.ag[0].fit;
+		this.bestSol.mat_mxc= this.ag[0].mat_mxc;  //en una primera instancia guarda las mejores soluciones encontradas
+		this.bestSol.fit= this.ag[0].fit;			// y su fit
 	
 
 		for (int hx=0; hx< this.max_p; hx++){ //bucle generacion 
 		
 
-			// estrategia elitista al parecer agrega y respalda las 2 primeras soluciones en cada generacion.
-			for (int ik=0; ik<keep; ik++){  
-				if(ag[ik].esFactible2()){
-					tempElitist.add(ag[ik]);
-				}
-			}
+		
 			//////////////////Dividir toda la población en dos subpoblaciones%%% %%%
 			//Divide a toda la población en Población1 (Tierra1) y Población2 (Tierra2)
 			//De acuerdo a su forma física.
 			//Las mariposas monarca en Population1 son mejores o iguales a Population2.
 			//Por supuesto, podemos dividir aleatoriamente a toda la población en Población1 y Población2.
 
-			for (int popindex = 0; popindex < poblacion; ++popindex){
+			for (int popindex = 0; popindex < poblacion; ++popindex){ //actualiza la distribucion de las soluciones para las poblaciones
 				if (popindex < NP1){
 					ag1[popindex].mat_mxc=this.copiarArray(ag[popindex].mat_mxc);
 
@@ -121,7 +107,7 @@ public class inidata {
 				}
 			}
 			
-			// Migration operator Falta como calcular pa la segunda dimension ... a la vuelta
+			// Migration operator 
 
 
 			for(int k1=0; k1 <NP1;k1++){
@@ -136,34 +122,28 @@ public class inidata {
 							land1[parnum1] = this.copiarArray18(ag2[(int) r3].mat_mxc[parnum1]);						
 						}
 				}
-				//ag[k1].showMatriz(ag[k1].mat_mxc);
-				//System.out.println("--------------");
-				//ag[k1].showMatriz(land1);
-				//System.out.println("-------fin-----");
 				
 				if(this.LandIsFactible(land1)){
 					Maux= new matriz(this.matrizI,this.celdas,this.Mmax,land1);
 					if(Maux.fit<ag[k1].fit){
 						ag[k1].mat_mxc= this.copiarArray(land1);
 					
-					}else{
-					//System.out.println("repite");
-					
 					}
 				
 				
 				
-				}
+				}else{
+					
+					k1--;
+					}
 			}
 			
 			
 			
-			// Butterfly adjusting operator negro aplicale a este porfi <3
+			// Butterfly adjusting operator 
 			
 			
-			//double scale = maxStepSize/ Math.pow(max_p, 2);
-			//int StepSzie = Math.ceil()
-		
+			
 		for(int k2=0; k2 <NP2;k2++){
 			double scale = maxStepSize / Math.pow(hx+1, 2);
 	        int StepSize = (int) Math.ceil(exprnd(2*max_p));
@@ -194,7 +174,7 @@ public class inidata {
 					ag[NP1+k2].mat_mxc= this.copiarArray(land2);
 				}
 				
-			}
+			}else k2--;
 		}
 	
 		this.actualizaPxC(ag);
@@ -202,21 +182,16 @@ public class inidata {
 		this.ordenarSol(ag);
 		
 		if(ag[0].isFactible() && ag[0].fit <= bestSol.fit){
-			//System.out.println("SE CAMBIOOO");
 			this.bestSol.mat_mxc= this.copiarArray(ag[0].mat_mxc);
 			this.bestSol.fit= this.ag[0].fit;
 		}
 		
 		
 		}
-		//this.verSolAG(); //ver soluciones finales
-		//this.bestSol.showMatriz(this.bestSol.mat_mxc);
-		//HABILITAR ESTAS
 		
-		//this.bestSol.showMatriz(bestSol.mat_mxc);
+		//this.bestSol.showMatriz(bestSol.mat_mxc); //habilitar para ver matriz MxC 
 		System.out.println("solucion encontrada de "+this.archivoDir+"  con best encontrada:" +this.bestSol.fit+" de un esperado de: "+this.bestSolucion);
 		
-		//this.pruebas();
 	}
 
 	
@@ -227,7 +202,7 @@ public class inidata {
 		
 	}
 	
-	public matriz[] ordenarSol(matriz[] matriz){		
+	public matriz[] ordenarSol(matriz[] matriz){		//ordena arreglo de soluciones (matriz[])
 		return quicksort(matriz,0,matriz.length-1);
 	}
 	public matriz[] quicksort(matriz numeros[], int izq, int der){ //algoritmo de ordenamiento quicksort
@@ -282,16 +257,6 @@ public class inidata {
 		System.out.println("-----------FIIIIiiIIIIIn---------");
 	}
 
-	public void verSolAG1(){ //ES COMPLEMENTARIO PARA EL DESARROLLO
-		for(int i=0; i<this.ag1.length;i++){
-			this.ag1[i].showMatriz(this.ag1[i].mat_mxc);
-			System.out.println("es factible?: "+this.ag1[i].isFactible());
-			System.out.println("Fit: "+this.ag1[i].fit);
-			System.out.println("--------------------");
-		}
-		
-		System.out.println("-----------FIIIIiiIIIIIn---------");
-	}
 	
 	public boolean LandIsFactible(int [][] matrizF){ //restriccion maximo maquinas
 		int MmaxC=0;
@@ -358,10 +323,8 @@ public class inidata {
 	        		if(leer<=7||leer>=14)
 	        			if(leer<=7){
 	        				dataa= linea.split("=");
-	        				if(leer==2){
-	        					
+	        				if(leer==2){	
 	        					bestSolucion= Integer.parseInt(dataa[1]);
-	        					
 	        				}
 	        				if(leer==4){
 	        					
@@ -386,14 +349,11 @@ public class inidata {
 	        					}
 	        				}
 	        				matrizList.add(dataaM);
-        					//System.out.println(Arrays.toString(dataaM));
-
 	        			}
 	 	            
 	 	          }
 	        	 if(linea.equals("}")){
 	        		 leer++;
-	        		// System.out.println("encontre uno");
 
 	        	 }        	 
 	        	 
@@ -401,7 +361,6 @@ public class inidata {
 	         int [][] matriz=new int[maquinas][partes];
 	         for(int i=0;i<matrizList.size();i++){
 	        	 matriz[i]=matrizList.get(i);
-	        	 //System.out.println(Arrays.toString(matrizList.get(i)));
 	         }
 	         this.matrizI=matriz;
 	      }
@@ -419,7 +378,7 @@ public class inidata {
 	
 	}
 	
-	//--------------para la heuristica
+	//--------------para la heurística
 	private double sum(double[] vector){
 		double sumatotal=0;
 		for(int i=0;i<vector.length;i++){
@@ -436,7 +395,6 @@ public class inidata {
 	}
 	private int sigmoidal(double valor){ //adaptar sigmoidal + 0-1
 		valor=1/(1+Math.pow(Math.E, -valor));
-		//System.out.println(valor);
 		if(valor>=0.5){
 			return 1;
 
@@ -446,7 +404,7 @@ public class inidata {
 		}
 		
 	}
-	private double[][] levyFly(int stepSize, int nMaquinas) { 
+	private double[][] levyFly(int stepSize, int nMaquinas) { //matriz con distribucion de levy
 		double[][] matrizNew=new double[this.matrizI.length][this.celdas];
 		double [] fx=new double[stepSize];
 		
@@ -464,7 +422,7 @@ public class inidata {
 	
 	// --------------------------fin heur------------------
 	
-	public int[][] copiarArray(int[][] src) {
+	public int[][] copiarArray(int[][] src) { //copia matrices (2x2)
 	    int length = src.length;
 	    int[][] target = new int[length][src[0].length];
 	    for (int i = 0; i < length; i++) {
@@ -473,7 +431,7 @@ public class inidata {
 	    return target;
 	}
 	
-	public int[] copiarArray18(int[] src) {
+	public int[] copiarArray18(int[] src) { //copia arreglo 
 	    int length = src.length;
 	    int[] target = new int[length];
 	    
@@ -482,41 +440,5 @@ public class inidata {
 	    return target;
 	}
 	
-	
-	
-	
-	
-	
-	
-	/*
-	public void solucionparche(){ // solo si es factible respaldamos la mejor solucion!  ESTA HAY Q BORRARLA
-		for(int y=0; y<ag.length;y++){
-			if(ag[y].esFactible2()){
-				if((ag[y].fit<this.totalfit)||bestSol==null){
-					System.out.println("se encontro una mejor");
-					this.bestSol= ag[y];
-					this.totalfit= ag[y].fit;
-					
-					break;
-				}else{
-					//System.out.println("no hice nada");
-				}
-			}
-			
-		}
-	}
-	public void pruebas(){			//muestra el fit antes y despues de ordenar!
-		this.CalculaCosto(ag);
-		for(int i=0; i<ag.length;i++){
-			System.out.println("fit ag:"+ag[i].fit);
-		}
-		System.out.println("------------------");
-		this.ag= this.ordenarSol(ag);
-		for(int i=0; i<ag.length;i++){
-			//System.out.println(ag[i].fit);
-		}
 		
-	}
-	*/
-	
 }
