@@ -52,7 +52,7 @@ public class Main {
 		}
 		/*//al descomentar inicia algoritmo con solo una instancia
 		if (ficheros != null){
-			String direccion="BoctorProblem_90_instancias/MCDP_Boctor_Problem01_C3_M6.txt";
+			String direccion="BoctorProblem_90_instancias/MCDP_Boctor_Problem03_C2_M12.txt";
 			alg= new inidata(direccion);
 			alg.algoritmo();
 		

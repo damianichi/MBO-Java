@@ -10,8 +10,8 @@ public class inidata {
 	//------------- primera parte algoritmo--------
 	int keep =2;
 	private final double p= 0.416;
-	private final int poblacion= 5000;
-	private final Integer max_p= 40; //gen max
+	private final int poblacion= 3000;
+	private final Integer max_p= 60; //gen max
 	private int NP1;
 	private int NP2;
 	private int dim1;
@@ -87,9 +87,7 @@ public class inidata {
 	
 
 		for (int hx=0; hx< this.max_p; hx++){ //bucle generacion 
-		
 
-		
 			//////////////////Dividir toda la población en dos subpoblaciones%%% %%%
 			//Divide a toda la población en Población1 (Tierra1) y Población2 (Tierra2)
 			//De acuerdo a su forma física.
