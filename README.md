@@ -1,4 +1,6 @@
 # MBO-Java
+Monarch butterfly optimization JAVA
+
 Proyecto del ramo "Fundamentos inteligencia artificial" - MBO optimización de mariposa monarca con problema de maquinas y celdas
 
 
