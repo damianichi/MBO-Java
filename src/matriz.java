@@ -25,15 +25,41 @@ public class matriz {
 			this.crearMxC();}
 		this.crearPxC();
 	}
+	public  matriz (int[][] matriz, int celdas, int Mmax, int[][] mxc){
+		this.Mmax= Mmax;
+		this.mat_mxc=this.copiarArr(mxc); //COPIAR ARREGLO
+		this.matrizInicial= matriz;
+		this.celdas=celdas;
+		this.NMaquinas=matrizInicial.length;
+		this.NPartes=matrizInicial[0].length;
+		//this.crearMxC();
+		this.crearPxC();
+		this.calcularfit();
+
+	}
 	
 	public matriz(String direccion){
 		// codigo para cargar matriz desde txt
 		
 	}
 	
-	public void crea(){
-		
+	
+	
+	public int[][] copiarArr(int[][] src) {
+	    int length = src.length;
+	    int[][] target = new int[length][src[0].length];
+	    for (int i = 0; i < length; i++) {
+	        System.arraycopy(src[i], 0, target[i], 0, src[i].length);
+	    }
+	    return target;
 	}
+	
+	
+	
+	
+	
+	
+	
 	
 	public void crearMxC(){ // se crea una primera solucion con 1 aleatorios
 		Random random = new Random();
@@ -50,25 +76,30 @@ public class matriz {
 		
 	}
 	
+	
 	public boolean isFactible(){ //restriccion maximo maquinas
 		int MmaxC=0;
+		int maxMxc=0;
 		for(int rr=0;rr<this.mat_mxc[0].length;rr++){
 			for(int r=0;r<this.mat_mxc.length;r++){
-			
 				MmaxC=MmaxC+this.mat_mxc[r][rr];
-				//if(r==this.mat_mxc.length -1){
-					//System.out.println("MmaxC: "+MmaxC);
-					//System.out.println("Mmax: "+Mmax);
-	
-					//System.out.println("el MAX: "+ MmaxC+"columna "+r);
-					
-
-				//}
-			
 			}
 			if(MmaxC>this.Mmax) 
 				return false;
 			MmaxC=0;
+		}
+		for(int r=0;r<this.mat_mxc.length;r++){
+			for(int rr=0;rr<this.mat_mxc[0].length;rr++){
+				//System.out.println(maxMxc);
+				maxMxc+=MmaxC+this.mat_mxc[r][rr];
+			}
+			if(maxMxc!=1){
+				return false;
+			}
+			//System.out.println(maxMxc);
+			
+			maxMxc=0;
+			
 		}
 		return true;
 		
@@ -148,69 +179,6 @@ public class matriz {
         }
         this.fit=totalSumatoria;
 	}	
-	
-	public void esFactible(){
-        
-        int maquinaCelda = 0;
-        int parteCelda = 0;
-        int maquinaMax = 0;
-        int restriccionUno = 1; //Suponemos que cumple la restriccion uno de maquina pertenece a celda.
-        int restriccionDos = 1; //suponemos que cumple la restriccion dos de partes pertenece a celda.
-        int restriccionTres = 1;    //suponemos que cumple la restriccion de cantidad máxima de máquinas por celda.
-        int i = 0;
-        int j = 0;
-        int resultado = 0;
-        
-        
-        for(i = 0; i < this.NMaquinas; i++) {    //recorremos hacia el lado.
-            for(j = 0; j < this.celdas; j++) {
-                maquinaCelda = maquinaCelda + (mat_mxc[i][j]);  //sumamos hacia el lado.
-            }
-            if(maquinaCelda != 1){  //si la suma es distinta de 1 entonces no es factible.
-                restriccionUno = restriccionUno*0;
-            }
-            maquinaCelda = 0;   //reiniciamos contador para volver a iterar.
-        }
-        if(restriccionUno == 0){
-            System.out.println("Error, la matriz MxC no es factible.");
-        }
-        
-        
-        for(i = 0; i < this.NPartes; i++) {  //recorremos hacia el lado.
-            for(j = 0; j < this.celdas; j++) {
-                parteCelda = parteCelda + (mat_pxc[i][j]);  //sumamos hacia el lado
-            }
-            if(parteCelda != 1){    //si la suma es distinta de 1 entonces no es factible.
-                restriccionDos = restriccionDos*0;
-            }
-            parteCelda = 0; //reiniciamos contador para volver a iterar.
-        }
-        if(restriccionDos == 0){
-            System.out.println("Error, la matriz PxC no es factible.");
-        }
-        
-        
-        for(i = 0; i < this.celdas; i++) {          //recorremos hacia abajo
-            for(j = 0; j < this.NMaquinas; j++){
-                maquinaMax = maquinaMax + (mat_mxc[j][i]); //sumamos hacia abajo.
-            }
-            if(maquinaMax <= Mmax){ //si la suma no supera el máximo total de máquinas aceptadas, entonces la matriz sigue siendo factible.
-                restriccionTres = restriccionTres*1;
-                maquinaMax = 0;
-            }else{  
-                restriccionTres = restriccionTres*0;    //si la suma supera el máximo de máquinas aceptadas, entonces la matriz se vuelve infactible.
-                System.out.println("Error, la matriz no cumple con la condición Mmax.");
-            }
-        }
-        
-        resultado = restriccionUno*restriccionDos*restriccionTres;  //multiplicamos el total final de las restricciones.
-        if(resultado == 1){ //si el total nos da 1 significa que la instancia es factible.
-            System.out.println("Su enunciado SI es factible :) ");
-        }else{
-            System.out.println("Su enunciado NO es factible :( ");
-        }
-        
-    }
 		
 	public boolean esFactible2(){		// considera restriccion para partes, maquinas y maquinas por celdas etc.
     
